@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Ingresa un nuevo producto</h1>
+    <form
+      id="formulario"
+      action="productos"
+      enctype="multipart/form-data"
+      method="post"
+    >
+      <div class="formInput">
+        <input id="name" type="text" placeholder="Nombre" name="title" />
+      </div>
+      <div class="formInput">
+        <input id="price" type="number" placeholder="precio" name="price" />
+      </div>
+      <div class="formInput">
+        <input id="file" type="file" name="myFile" />
+      </div>
+      <input type="submit" value="Enviar" />
+    </form>
+  </body>
+  <script>
+    // console.log("hola");
+    // const form = document.getElementById("formulario");
+    // console.log(document.getElementById("file").files[0]);
+
+    // form.addEventListener("submit", submitForm);
+
+    // function submitForm(e) {
+    //   e.preventDefault();
+    //   const name = document.getElementById("name");
+    //   const price = document.getElementById("price");
+    //   const file = document.getElementById("file");
+
+    //   const formData = new FormData();
+    //   formData.append("title", name.value);
+    //   formData.append("price", price.value);
+    //   formData.append("file", file.files[0]);
+
+    //   fetch("http://localhost:8080/uploadProduct", {
+    //     method: "POST",
+    //     body: formData,
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   })
+    //     .then((res) => console.log(res))
+    //     .catch((err) => ("Error", err));
+    // }
+  </script>
+</html>

@@ -11,18 +11,19 @@ const routerProduct = Router();
 //GET
 routerProduct.get("/", (req, res) => {
   //res.send(data.getAll());
-  const productos = data.getAll();
-  console.log("routerProducts: ", productos);
-  // res.render("productos", {
-  //   urlProd: "prod",
-  //   products: productos,
-  //   listExists: true,
-  // });
-  res.send(productos);
+  data.getAll().then((items) => {
+    res.render("productos", {
+      urlProd: "prod",
+      products: items,
+      listExists: true,
+    });
+  });
 });
 routerProduct.get("/:id", (req, res) => {
   let itemId = req.params.id;
-  res.send(data.getById(itemId));
+  data.getById(itemId).then((item) => {
+    res.send(item);
+  });
 });
 
 //POST
@@ -45,21 +46,21 @@ routerProduct.post("/", upload.single("myFile"), (req, res, next) => {
   }
 
   let item = {
-    title: req.body.title,
+    name: req.body.title,
     price: req.body.price,
     description: req.body.description,
     stock: req.body.stock,
     code: req.body.code,
     thumbnail: file.path,
   };
-  const objetoCreado = data.save(item);
-  if (Object.keys(objetoCreado).includes("id")) {
-    res.redirect("/");
-    //res.send(objetoCreado);
-  } else {
-    res.status(400);
-    res.send("No se guardo la información");
-  }
+  data
+    .save(item)
+    .then((item) => {
+      res.status(200).json(item);
+    })
+    .catch((error) => {
+      res.status(500).json({ mensaje: "no se guardo la información" });
+    });
 });
 
 //PUT
@@ -67,21 +68,22 @@ routerProduct.post("/", upload.single("myFile"), (req, res, next) => {
 routerProduct.put("/:id", upload.none(), (req, res) => {
   let itemId = req.params.id;
   const body = req.body;
-  test = {
-    ...body,
-    itemId,
-  };
+  // test = {
+  //   ...body,
+  //   itemId,
+  // };
 
-  data.updateById(itemId, body);
-
-  res.send(data.updateById(itemId, body));
+  data.updateById(itemId, body).then(() => {
+    res.send({ itemActualizado: itemId });
+  });
 });
 
 //DELETE
 routerProduct.delete("/:id", (req, res) => {
   let itemId = req.params.id;
-  data.deleteById(itemId);
-  res.send({ itemEliminado: itemId });
+  data.deleteById(itemId).then(() => {
+    res.send({ itemEliminado: itemId });
+  });
 });
 
 export default routerProduct;
