@@ -11,7 +11,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.json());
-const db = new ContenedorChat("db.json");
+const db = new ContenedorChat("./public/db/db.json");
 //Template Engines
 
 app.use(express.urlencoded({ extended: true }));
@@ -39,12 +39,13 @@ io.on("connection", (socket) => {
   socket.on("chat-in", (data) => {
     const date = new Date().toLocaleTimeString();
     const dataOut = {
-      msn: data.msn,
-      username: data.username,
+      text: data.text,
+      author: data.author,
       date,
     };
     // Guardar en DB
     db.save(dataOut);
+    db.normalizarChat();
 
     console.log(dataOut);
     io.sockets.emit("chat-out", dataOut);

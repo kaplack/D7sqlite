@@ -1,4 +1,5 @@
 import fs from "fs";
+import { normalize, schema } from "normalizr";
 
 class ContenedorChat {
   constructor(textJson) {
@@ -42,6 +43,30 @@ class ContenedorChat {
   deleteAll() {
     this.data = [];
     this.write();
+  }
+  normalizarChat() {
+    const authorSchema = new schema.Entity("authors");
+    const msgSchema = new schema.Entity("mensaje", {
+      author: authorSchema,
+    });
+
+    fs.readFile("./public/db/db.json", "utf-8", (err, data) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      let json = JSON.parse(data);
+      const dataNormalized = normalize(json, msgSchema);
+      console.log(dataNormalized);
+
+      fs.writeFile(
+        "./public/db/dbNormalized.json",
+        JSON.stringify(dataNormalized),
+        (err) => {
+          console.log(err);
+        }
+      );
+    });
   }
 }
 
