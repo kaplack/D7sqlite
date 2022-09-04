@@ -66,6 +66,11 @@ class ContenedorChat {
           console.log(err);
         }
       );
+
+      const dbOriginal = fs.statSync("./public/db/db.json").size;
+      const dbResult = fs.statSync("./public/db/dbNormalized.json").size;
+      const result = (dbResult / dbOriginal) * 100;
+      console.log(`el archivo original se reduce en ${100 - result}% `);
     });
   }
 }
