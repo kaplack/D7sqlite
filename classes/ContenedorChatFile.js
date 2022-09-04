@@ -56,7 +56,7 @@ class ContenedorChat {
         return;
       }
       let json = JSON.parse(data);
-      const dataNormalized = normalize(json, msgSchema);
+      const dataNormalized = normalize(json, [msgSchema]);
       console.log(dataNormalized);
 
       fs.writeFile(
