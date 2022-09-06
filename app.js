@@ -11,7 +11,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.json());
-const db = new ContenedorChat("./public/db/db.json");
+const db = new ContenedorChat("./public/db/dbNormalized.json");
 //Template Engines
 
 app.use(express.urlencoded({ extended: true }));
@@ -30,6 +30,7 @@ app.get("/", (req, res) => {
 app.use("/api/productos", routerProduct);
 app.use("/api/productos-test", routerProductTest);
 app.use("/chat", (req, res) => {
+  //db.myDenormalized();
   res.render("index");
 });
 

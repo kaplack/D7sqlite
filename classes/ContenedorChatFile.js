@@ -1,9 +1,13 @@
 import fs from "fs";
-import { normalize, schema } from "normalizr";
+import { denormalize, normalize, schema } from "normalizr";
 
 class ContenedorChat {
   constructor(textJson) {
     this.textJson = textJson;
+    this.authorSchema = new schema.Entity("authors");
+    this.msgSchema = new schema.Entity("mensaje", {
+      author: this.authorSchema,
+    });
     this.data = [];
     try {
       this.read();
@@ -13,15 +17,17 @@ class ContenedorChat {
   }
 
   read() {
-    this.data = JSON.parse(fs.readFileSync(this.textJson));
+    const dataOr = JSON.parse(fs.readFileSync(this.textJson));
+    this.data = denormalize(dataOr.result, [this.msgSchema], dataOr.entities);
   }
 
   write() {
-    fs.writeFileSync(this.textJson, JSON.stringify(this.data));
+    fs.writeFileSync("./public/db/db.json", JSON.stringify(this.data));
   }
 
   save(obj) {
     obj["id"] = this.data.length + 1;
+    //console.log(this.data);
     this.data.push(obj);
     this.write();
   }
@@ -45,18 +51,13 @@ class ContenedorChat {
     this.write();
   }
   normalizarChat() {
-    const authorSchema = new schema.Entity("authors");
-    const msgSchema = new schema.Entity("mensaje", {
-      author: authorSchema,
-    });
-
     fs.readFile("./public/db/db.json", "utf-8", (err, data) => {
       if (err) {
         console.log(err);
         return;
       }
       let json = JSON.parse(data);
-      const dataNormalized = normalize(json, [msgSchema]);
+      const dataNormalized = normalize(json, [this.msgSchema]);
       console.log(dataNormalized);
 
       fs.writeFile(
@@ -70,6 +71,7 @@ class ContenedorChat {
       const dbOriginal = fs.statSync("./public/db/db.json").size;
       const dbResult = fs.statSync("./public/db/dbNormalized.json").size;
       const result = (dbResult / dbOriginal) * 100;
+
       console.log(`el archivo original se reduce en ${100 - result}% `);
     });
   }

@@ -1,4 +1,5 @@
 // Configurar username
+
 let username = sessionStorage.getItem("username");
 if (username == null) {
   username = prompt("Insert username");
@@ -39,7 +40,7 @@ function addDataToDiv(data) {
 
 // Recupera todos los mensajes a la pagina
 function loadDataToDiv(data) {
-  console.log(data);
+  //console.log(data);
   data.forEach((d) => addDataToDiv(d));
 }
 
