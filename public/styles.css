@@ -22,7 +22,8 @@ h1 {
   align-items: center;
 }
 
-.chat-form {
+.chat-form,
+.login-form {
   max-width: 250px;
 }
 
@@ -63,4 +64,9 @@ h1 {
   object-fit: cover;
   -o-object-position: center;
   object-position: center;
+}
+
+.user-box {
+  display: flex;
+  justify-content: space-between;
 }

@@ -1,3 +1,11 @@
+<% if (user) { %>
+<div class="user-box row">
+  <h2>Bienvenido <%= user.user %>!</h2>
+  <form action="/logout" method="post" class="form-logout">
+    <button>Salir</button>
+  </form>
+</div>
+<% } %>
 <nav class="navbar">
   <% if (urlProd == "prod") { %>
   <a href="/">Home</a>
