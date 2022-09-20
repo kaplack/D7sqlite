@@ -8,6 +8,8 @@ import ContenedorChat from "./classes/ContenedorChatFile.js";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import MongoStore from "connect-mongo";
+import ContenedorUser from "./classes/ContenedorUser.js";
+import bcryptjs from "bcryptjs";
 
 const app = express();
 
@@ -16,6 +18,7 @@ const io = new Server(server);
 
 app.use(express.json());
 const db = new ContenedorChat("./public/db/dbNormalized.json");
+const myMongoDB = new ContenedorUser();
 //Template Engines
 
 //CONFIGURACION EXPRESS-SESSION
@@ -52,21 +55,45 @@ app.get("/", (req, res) => {
   });
 });
 
-//LOG OUT (el header.ejs envia un post al localhost/logout)
-app.post("/logout", (req, res) => {
-  let user = req.session.currentUser;
-  req.session.destroy();
-  res.send(`<h1>Hasta luego ${user.user} </h1>`);
-});
-
 app.use("/api/productos", routerProduct);
 app.use("/api/productos-test", routerProductTest);
+
 //LOGIN
 app.use("/login", routerLogin);
 //LOGIN
 app.use("/chat", (req, res) => {
   //db.myDenormalized();
   res.render("index");
+});
+
+//LOG OUT (el header.ejs envia un post al localhost/logout)
+app.post("/logout", (req, res) => {
+  let user = req.session.currentUser;
+  req.session.destroy();
+  res.send(`<h1>Hasta luego ${user} </h1>`);
+});
+//SIGNUP
+app.get("/signup", (req, res) => {
+  res.render("signup", { user: req.session.currentUser });
+});
+app.post("/signup", async (req, res) => {
+  let usersData = await myMongoDB.read();
+  let userCtrl = usersData.some((u) => u.username == req.body.user);
+  if (!userCtrl) {
+    let password = req.body.password;
+    let salt = bcryptjs.genSaltSync(8);
+    password = bcryptjs.hashSync(String(password), salt);
+
+    let userData = {
+      username: req.body.user,
+      email: req.body.email,
+      password,
+    };
+    myMongoDB.save(userData);
+    res.redirect("/");
+  } else {
+    res.send("El nombre de usuario ya existe!");
+  }
 });
 
 io.on("connection", (socket) => {

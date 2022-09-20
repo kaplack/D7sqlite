@@ -1,21 +1,24 @@
 import express from "express";
+import session from "express-session";
 import multer from "multer";
 import Products from "../classes/products.js";
+import ContenedorUser from "../classes/ContenedorUser.js";
 import path from "path";
 
 import { Router } from "express";
 
 const data = new Products();
+const users = new ContenedorUser();
 const routerProduct = Router();
 
 //GET
 routerProduct.get("/", (req, res) => {
-  //res.send(data.getAll());
+  let user = req.session.currentUser;
   data.getAll().then((items) => {
     res.render("productos", {
-      urlProd: "prod",
       products: items,
       listExists: true,
+      user,
     });
   });
 });
