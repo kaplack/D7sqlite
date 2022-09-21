@@ -12,13 +12,15 @@ const users = new ContenedorUser();
 const routerProduct = Router();
 
 //GET
-routerProduct.get("/", (req, res) => {
+routerProduct.get("/", async (req, res) => {
   let user = req.session.currentUser;
+  let usersData = await users.read();
+  let currUser = usersData.filter((u) => u.username == user);
   data.getAll().then((items) => {
     res.render("productos", {
       products: items,
       listExists: true,
-      user,
+      user: currUser[0],
     });
   });
 });

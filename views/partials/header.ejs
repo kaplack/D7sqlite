@@ -1,6 +1,6 @@
 <% if (user) { %>
 <div class="user-box row">
-  <h2>Bienvenido <%= user %>!</h2>
+  <h2>Bienvenido <%= user.email %>!</h2>
   <form action="/logout" method="post" class="form-logout">
     <button>Salir</button>
   </form>

@@ -48,10 +48,12 @@ app.use("/public", express.static("public"));
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  let user = req.session.currentUser;
+  let usersData = await myMongoDB.read();
+  let currUser = usersData.filter((u) => u.username == user);
   res.render("main", {
-    urlProd: "home",
-    user: req.session.currentUser,
+    user: currUser[0],
   });
 });
 

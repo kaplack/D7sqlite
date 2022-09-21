@@ -10,9 +10,12 @@ const users = new ContenedorUser();
 
 const routerLogin = Router();
 
-routerLogin.get("/", (req, res) => {
+routerLogin.get("/", async (req, res) => {
+  let user = req.session.currentUser;
+  let usersData = await users.read();
+  let currUser = usersData.filter((u) => u.username == user);
   res.render("login", {
-    user: req.session.currentUser,
+    user: currUser[0],
   });
 });
 
